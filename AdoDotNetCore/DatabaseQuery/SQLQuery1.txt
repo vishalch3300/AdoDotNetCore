@@ -1,0 +1,104 @@
+﻿create database AdoDotNetDB_Core
+
+use AdoDotNetDB_Core
+
+create table Employee
+(
+Id int primary key identity,
+Name varchar(50) not null,
+Gender varchar(50) not null,
+Age int not null,
+Designation varchar(50) not null,
+City varchar(50) not null
+)
+
+select * from Employee
+
+-------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE spGetAllEmployee
+as
+Begin
+	select * from Employee order by Id
+End
+
+Go
+
+CREATE PROCEDURE spAddEmployee
+(
+@name varchar(50),
+@gender varchar(50),
+@age int,
+@designation varchar(50),
+@city varchar(50)
+)
+as
+Begin
+	Insert into Employee (Name,Gender,Age,Designation,City)
+	values(@name,@gender,@age,@designation,@city)
+End
+
+Go
+
+CREATE PROCEDURE spUpdateEmployee
+(
+@id int,
+@name varchar(50),
+@gender varchar(50),
+@age int,
+@designation varchar(50),
+@city varchar(50)
+)
+as
+Begin
+	Update Employee set Name = @name, Gender = @gender,
+	Age = @age, Designation = @designation, City = @city
+	where Id = @id
+End
+
+Go
+
+CREATE PROCEDURE spDeleteEmployee
+(
+@id int
+)
+as
+Begin
+	Delete from Employee where Id = @id
+End
+
+Go
+
+CREATE PROCEDURE spGetEmployeeById
+(
+@id int
+)
+as
+Begin
+	select * from Employee where Id = @id
+End
+
+-------------------------------------------------------------------------------------------
+
+select Id,Name,Gender,Age,Designation,City from Employee
+exec spGetAllEmployee
+
+-------------------------------------------------------------------------------------------
+
+insert into Employee (Name,Gender,Age,Designation,City) values ('Vishal','Male',28,'Manager','Mumbai')
+exec spAddEmployee 'Vishal','Male',28,'Manager','Mumbai'
+
+-------------------------------------------------------------------------------------------
+
+select * from Employee where Id=1
+exec spGetEmployeeById 1
+
+-------------------------------------------------------------------------------------------
+
+update Employee set Name='Vishal',Gender='Male',Age=28,Designation='Manager',City='Thane' where Id=1
+exec spUpdateEmployee 1,'Vishal','Male',28,'Manager','Thane'
+
+-------------------------------------------------------------------------------------------
+delete from Employee where Id=1
+exec spDeleteEmployee 1
+
